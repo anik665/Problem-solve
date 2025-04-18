@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="nameInput" placeholder="Type Your Task">
+    <button id="addbtn">Add</button>
+    <ul id="tolist"></ul>
+    <script>
+        const addbtn=document.querySelector('#addbtn');
+        const nameInput=document.querySelector('#nameInput');
+        const tolist=document.querySelector('#tolist');
+        addbtn.addEventListener('click',(e)=>{
+            const task=nameInput.value;
+            const li=document.createElement('li');
+            li.innerHTML=task;
+            const delBtn=document.createElement('button');
+            delBtn.innerHTML='Delete';
+            delBtn.addEventListener('click',(e)=>{
+                li.remove();
+            })
+            li.appendChild(delBtn);
+            tolist.appendChild(li);
+            nameInput.value='';
+
+        })
+
+    </script>
+</body>
+</html>

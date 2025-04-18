@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .dark-mode {
+        background-color: #222;
+        color: #fff;
+    }
+</style>
+
+
+<body>
+    <input type="text" id="nameInput" placeholder="Type your name">
+    <button id="greetBtn">Greet Me</button>
+    <p id="greetText"></p>
+
+    <button id="toggleModeBtn">Toggle Dark Mode</button>
+    <div id="container" style="padding: 20px;">
+        <p>This is your content area</p>
+    </div>
+
+    <script>
+        const greetBtn = document.getElementById('greetBtn');
+        const nameInput = document.querySelector('#nameInput');
+        const greetText = document.querySelector('#greetText');
+        greetBtn.addEventListener('click', (e) => {
+            const name = nameInput.value;
+            greetText.innerHTML = `Hello ${name}`;
+        })
+        const toggleModeBtn = document.querySelector('#toggleModeBtn');
+        const container = document.querySelector('#container');
+        toggleModeBtn.addEventListener('click', (e) => {
+            container.classList.toggle('dark-mode');
+
+            if (container.classList.contains('dark-mode')) {
+                toggleModeBtn.innerHTML = 'Light mode';
+            }
+            else {
+                toggleModeBtn.innerHTML = 'Dark mode'
+            }
+
+        })
+    </script>
+
+</body>
+
+</html>

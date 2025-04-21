@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pro Task App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    input, select {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      width: 300px;
+      margin-top: 20px;
+    }
+
+    li {
+      background-color: #fff;
+      margin-bottom: 10px;
+      padding: 12px 15px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      flex-direction: column;
+    }
+
+    .done {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    li small {
+      font-size: 12px;
+      color: #555;
+    }
+
+    li button {
+      margin-top: 5px;
+      background-color: #dc3545;
+      font-size: 14px;
+    }
+
+    li button:hover {
+      background-color: #b52a37;
+    }
+
+    /* Themes */
+    .light-theme {
+      background-color: #f2f2f2;
+      color: #000;
+    }
+
+    .dark-theme {
+      background-color: #121212;
+      color: #fff;
+    }
+
+    .dark-theme li {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .colorful-theme {
+      background: linear-gradient(135deg, #f7971e, #ffd200);
+      color: #222;
+    }
+
+    .colorful-theme li {
+      background-color: rgba(255, 255, 255, 0.9);
+      color: #222;
+    }
+  </style>
+</head>
+<body class="light-theme">
+
+  <input type="text" id="nameInput" placeholder="Type your task">
+  <input type="date" id="deadlineInput">
+  <button id="addBtn">Add</button>
+  <select id="themeSelect">
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+    <option value="colorful">Colorful</option>
+  </select>
+
+  <ul id="toList"></ul>
+
+  <script>
+    const addBtn = document.querySelector('#addBtn');
+    const nameInput = document.querySelector('#nameInput');
+    const deadlineInput = document.querySelector('#deadlineInput');
+    const toList = document.querySelector('#toList');
+    const themeSelect = document.querySelector('#themeSelect');
+    const body = document.body;
+
+    // Load tasks from localStorage
+    window.addEventListener('load', () => {
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      tasks.forEach(task => {
+        addTaskToDOM(task.text, task.done, task.deadline);
+      });
+    });
+
+    // Theme Change
+    themeSelect.addEventListener('change', () => {
+      body.className = '';
+      body.classList.add(`${themeSelect.value}-theme`);
+    });
+
+    // Add Task
+    addBtn.addEventListener('click', () => {
+      try {
+        if (nameInput.value.trim() === '') {
+          throw new Error('Please enter a task');
+        }
+      } catch (e) {
+        return alert(e.message);
+      }
+
+      const taskText = nameInput.value;
+      const deadline = deadlineInput.value;
+      addTaskToDOM(taskText, false, deadline);
+      saveTask(taskText, false, deadline);
+      nameInput.value = '';
+      deadlineInput.value = '';
+
+      // Notification
+      if (Notification.permission === "granted") {
+        new Notification("✅ Task Added!");
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            new Notification("✅ Task Added!");
+          }
+        });
+      }
+    });
+
+    // Add task to DOM
+    function addTaskToDOM(text, done = false, deadline = '') {
+      const li = document.createElement('li');
+      const title = document.createElement('div');
+      title.textContent = text;
+      if (done) title.classList.add('done');
+      li.appendChild(title);
+
+      if (deadline) {
+        const due = document.createElement('small');
+        due.textContent = `Due: ${deadline}`;
+        li.appendChild(due);
+      }
+
+      // Toggle done
+      title.addEventListener('click', () => {
+        title.classList.toggle('done');
+        updateTasks();
+      });
+
+      // Delete
+      const delBtn = document.createElement('button');
+      delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', () => {
+        li.remove();
+        updateTasks();
+      });
+
+      li.appendChild(delBtn);
+      toList.appendChild(li);
+    }
+
+    // Save task
+    function saveTask(text, done, deadline) {
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      tasks.push({ text, done, deadline });
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    // Update localStorage
+    function updateTasks() {
+      const allTasks = [];
+      document.querySelectorAll('#toList li').forEach(li => {
+        const text = li.firstChild.textContent.trim();
+        const done = li.firstChild.classList.contains('done');
+        const small = li.querySelector('small');
+        const deadline = small ? small.textContent.replace('Due: ', '') : '';
+        allTasks.push({ text, done, deadline });
+      });
+      localStorage.setItem('tasks', JSON.stringify(allTasks));
+    }
+  </script>
+</body>
+</html>

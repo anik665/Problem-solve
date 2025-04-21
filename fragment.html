@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Fragments Example</title>
+</head>
+<body>
+  <ul id="nameList">
+    </ul>
+
+  <script>
+    const names = ["Alice", "Bob", "Charlie", "David", "Eve"];
+    const nameList = document.getElementById('nameList');
+
+    // Without Document Fragment (less efficient)
+    console.time('Without Fragment');
+    for (const name of names) {
+      const listItem = document.createElement('li');
+      listItem.textContent = name;
+      nameList.appendChild(listItem);
+    }
+    console.timeEnd('Without Fragment');
+
+    // Clear the list for the next example
+    nameList.innerHTML = '';
+
+    // Using Document Fragment (more efficient)
+    console.time('With Fragment');
+    const fragment = document.createDocumentFragment(); // Create an empty fragment
+    for (const name of names) {
+      const listItem = document.createElement('li');
+      listItem.textContent = name;
+      fragment.appendChild(listItem); // Append to the fragment
+    }
+    nameList.appendChild(fragment); // Append the entire fragment to the DOM
+    console.timeEnd('With Fragment');
+  </script>
+</body>
+</html>

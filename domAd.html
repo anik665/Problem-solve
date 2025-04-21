@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="input" placeholder="Enter somthing">
+    <button id="btn">click</button>
+    
+    <ul id="list">
+        <li id="item">item 1</li>
+        <li id="item">item 2</li>
+        <li id="item">item 3</li>
+        <li id="item">item 4</li>
+    </ul>
+    <script>
+        const input=document.getElementById('input');
+        const Btn=document.getElementById('btn');
+        const task=document.getElementById('list');
+        const listItem=task.children;//get the html element 
+        for(let i=0;i<listItem.length;i++){
+            const li=listItem[i];
+            console.log(li)
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="Input">
+    <button id="addBtn">ADD</button>
+    <ul id="task"></ul>
+    <script>
+        const nameInput=document.getElementById('Input');
+        const addBtn=document.getElementById('addBtn');
+        const task=document.getElementById('task')
+        addBtn.addEventListener('click',()=>{
+            const li=document.createElement('li');
+            li.innerHTML=nameInput.value;
+            const delBtn=document.createElement('button');
+            delBtn.innerHTML='Delete';
+            delBtn.style.backgroundColor='red';
+            delBtn.addEventListener('click',()=>{
+                li.remove()
+            })
+            task.appendChild(li);
+            li.appendChild(delBtn)
+            nameInput.value='';
+        })
+    </script>
+</body>
+</html>
